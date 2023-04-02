@@ -10,37 +10,27 @@ export default {
       inFavorites: false,
       isLoading: false,
       isError: false,
+      isSearchLoading: false,
     }
   },
 
-  // computed: {
-  //   findHotel() {
-  //     return this.inFavorites
-  //       ? Boolean(this.favorites.find((el) => el.id === hotel.id))
-  //       : this.todos
-  //   }
-  // },
-
   mounted() {
     this.isLoading = true;
-    console.log('this.isLoading', this.isLoading);
     loadData('New York')
       .then((res) => {
         this.hotels.push(...res.data.propertySearch.properties);
-        console.log('hotels', this.hotels);
       })
       .catch(() => (
         this.isError = true
       ))
       .finally(() => {
         this.isLoading = false;
-        console.log('this.isLoading', this.isLoading)
       });
   },
 
   methods: {
     searchHotels(searchQuery) {
-
+      this.isSearchLoading = true;
       loadData(searchQuery)
       .then((res) => {
         this.hotels = res.data.propertySearch.properties;
@@ -49,13 +39,11 @@ export default {
         this.isError = true
       ))
       .finally(() => {
-        this.isLoading = false;
-        console.log('this.isLoading', this.isLoading)
+        this.isSearchLoading = false;
       });
 
       this.searchQuery = '';
     },
-
 
     addToFavorites(hotel) {
       this.favorites.push(hotel);
@@ -80,43 +68,59 @@ export default {
           </label>
 
           <div class="control columns is-variable is-3">
-            <input type="text" id="search-query" class="input column is-four-fifths mr-2" placeholder="Type search word"  v-model="searchQuery" />
-            <button class="button column is-primary is-normal auto is-responsive is-centered" @click="searchHotels(searchQuery)">Search</button>
+            <input 
+              type="text" 
+              id="search-query" 
+              class="input column is-four-fifths mr-2" 
+              placeholder="Type search word"  
+              v-model="searchQuery"
+            />
+            <button 
+              class="button column is-primary is-responsive is-centered"
+              :class="{ 'is-loading': isSearchLoading }"
+              @click="searchHotels(searchQuery)"
+            >
+            </button>
           </div>
         </div>
       </div>
       <div class="wrapper">
-        <div :class="`container is-flex justify-content: space-around ${isLoading ? 'loader' : 'is-hidden'}`"></div>
-      <div class="movies">
-        <div class="card" v-for="hotel of hotels" :key="hotel.id">
-          <div class="card-image">
-            <figure class="image is-4by3">
-              <img
-              :src=hotel.propertyImage.image.url
-              alt="Hotel image"
-              />
-            </figure>
-          </div>
-          <div class="card-content">
-            <div class="media">
-              <div class="media-content">
-                <p class="title is-4">{{ hotel.name }}</p>
-              </div>
+        <div 
+          class="container is-flex justify-content: space-around"
+          :class="`${isLoading ? 'loader' : 'is-hidden'}`"
+        >
+        </div>
+        <div class="hotels">
+          <div class="card" v-for="hotel of hotels" :key="hotel.id">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img
+                  :src=hotel.propertyImage.image.url
+                  alt="Hotel image"
+                />
+              </figure>
             </div>
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4">{{ hotel.name }}</p>
+                </div>
+              </div>
 
-            <div class="content mt-4">
-              <p class="subtitle is-6">Price per room {{ hotel.price.lead.formatted }}</p>
+              <div class="content mt-4">
+                <p class="subtitle is-6">Price per room {{ hotel.price.lead.formatted }}</p>
 
-              <button class="button is-primary is-outlined is-small" @click="addToFavorites(hotel)">
-                Add to Favorites
-              </button>
-              <button class="button is-small is-danger" @click="removeHotel(hotel)">Delete</button>
+                <button 
+                  class="button is-primary is-outlined is-small" 
+                  @click="addToFavorites(hotel)"
+                >
+                  Add to Favorites
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      </div>
-
     </div>
 
     <div class="sidebar">
