@@ -2,6 +2,8 @@
 
 A single-page application for searching hotels using the Hotels [API](https://rapidapi.com/apidojo/api/hotels4).
 
+[DEMOLINK](https://nadiiakoch.github.io/vue-hotels/)
+
 ## Technologies
 The following technologies were used in this project:
 
