@@ -1,7 +1,7 @@
 const options1 = {
 	method: 'GET',
 	headers: {
-		'X-RapidAPI-Key': '935b5e5856msh23438ba6f6a471fp1820edjsn0b3bdeb65ceb',
+		'X-RapidAPI-Key': '2ed2122782mshb0bd5103e30dff1p15b6dejsne48d99f47488',
 		'X-RapidAPI-Host': 'hotels4.p.rapidapi.com'
 	}
 };
@@ -21,10 +21,10 @@ export const fetchHotels = async (rid) => {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'X-RapidAPI-Key': '935b5e5856msh23438ba6f6a471fp1820edjsn0b3bdeb65ceb',
+      'X-RapidAPI-Key': '2ed2122782mshb0bd5103e30dff1p15b6dejsne48d99f47488',
       'X-RapidAPI-Host': 'hotels4.p.rapidapi.com'
     },
-    body: `{"currency":"USD","eapid":1,"locale":"en_US","siteId":300000001,"destination":{"regionId":"${rid}"},"checkInDate":{"day":17,"month":4,"year":2023},"checkOutDate":{"day":18,"month":4,"year":2022},"rooms":[{"adults":2,"children":[]}],"resultsStartingIndex":0,"resultsSize": 15,"sort":"PRICE_LOW_TO_HIGH","filters":{"price":{"max":1000,"min":1}}}`
+    body: `{"currency":"USD","eapid":1,"locale":"en_US","siteId":300000001,"destination":{"regionId":"${rid}"},"checkInDate":{"day":17,"month":4,"year":2023},"checkOutDate":{"day":18,"month":4,"year":2022},"rooms":[{"adults":2,"children":[]}],"resultsStartingIndex":0,"resultsSize": 9,"sort":"PRICE_LOW_TO_HIGH","filters":{"price":{"max":1000,"min":1}}}`
   };
   const response = await fetch('https://hotels4.p.rapidapi.com/properties/v2/list', options);
   const responseData = await response.json();

@@ -1,7 +1,11 @@
 <script>
-import { loadData } from './api/hotelsfetch'
+import { loadData } from './api/hotelsfetch';
+import Message from './components/Message.vue';
 
 export default {
+  components: {
+    Message,
+  },
   data() {
     return {
       hotels: [],
@@ -9,8 +13,9 @@ export default {
       favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
       inFavorites: false,
       isLoading: false,
-      isError: false,
       isSearchLoading: false,
+      errorMessage: '',
+      isError: false,
     }
   },
 
@@ -21,10 +26,11 @@ export default {
         this.hotels.push(...res.data.propertySearch.properties);
       })
       .catch(() => (
-        this.isError = true
+        console.log('err')
       ))
       .finally(() => {
         this.isLoading = false;
+        this.errorMessage = '';
       });
   },
 
@@ -35,11 +41,13 @@ export default {
       .then((res) => {
         this.hotels = res.data.propertySearch.properties;
       })
-      .catch(() => (
-        this.isError = true
-      ))
+      .catch(() => {
+        this.errorMessage = 'Hotels not found';
+        console.log('errorMessage', this.errorMessage);
+      })
       .finally(() => {
         this.isSearchLoading = false;
+        this.errorMessage = '';
       });
 
       this.searchQuery = '';
@@ -74,11 +82,13 @@ export default {
               class="input column is-four-fifths mr-2" 
               placeholder="Type search word"  
               v-model="searchQuery"
+              :disabled="isSearchLoading"
             />
             <button 
               class="button column is-primary is-responsive is-centered"
               :class="{ 'is-loading': isSearchLoading }"
               @click="searchHotels(searchQuery)"
+              :disabled="isSearchLoading"
             >
             </button>
           </div>
@@ -90,6 +100,13 @@ export default {
           :class="`${isLoading ? 'loader' : 'is-hidden'}`"
         >
         </div>
+        <!-- <Message
+          class="is-warning"
+          :active="errorMessage !== ''"
+        >
+        <p>{{ errorMessage }}</p>
+        </Message> -->
+
         <div class="hotels">
           <div class="card" v-for="hotel of hotels" :key="hotel.id">
             <div class="card-image">
